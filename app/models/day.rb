@@ -1,4 +1,6 @@
 class Day < ActiveRecord::Base
+  obfuscate_id
+
   belongs_to :championship
   has_many :fixtures
 

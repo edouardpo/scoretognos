@@ -1,4 +1,6 @@
 class Fixture < ActiveRecord::Base
+  obfuscate_id
+
   belongs_to :day
   belongs_to :team_a, class_name: 'Team'
   belongs_to :team_b, class_name: 'Team'

@@ -1,4 +1,6 @@
 class Championship < ActiveRecord::Base
+  obfuscate_id
+
   has_many :teams
   has_many :days
   has_many :user_scores

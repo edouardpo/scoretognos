@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  obfuscate_id
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :rememberable, :trackable, :validatable
@@ -23,5 +25,9 @@ class User < ActiveRecord::Base
     end
 
     return user
+  end
+
+  def has_joined championship
+    user_scores.where(championship_id: championship.id).any?
   end
 end

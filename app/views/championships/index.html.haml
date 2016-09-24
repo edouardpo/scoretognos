@@ -1,1 +1,24 @@
-%h1 Salut !!!
+.row
+  .col-xs-12.text-center
+    %h1 Bienvenue sale Peink
+.row
+  - @championships.each do |c|
+    .col-xs-12.text-center
+      - if @user.has_joined(c)
+        = link_to c.name, championship_path(c), class: "btn btn-default"
+      - else
+        = link_to c.name, "#", data: {championship_link: join_championship_path(c), championship_name: c.name, toggle: "modal", target: "#join-modal"}, class: "btn btn-default"
+
+/ Modal
+#join-modal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+        %h4#myModalLabel.modal-title
+      .modal-body
+        Do you want to join this championship ?
+      .modal-footer
+        %button.btn.btn-default{type: "button", data: {dismiss: "modal"}} No
+        = link_to "Yes", "#", method: :post, class: 'btn btn-primary', id: "join-championship-link"

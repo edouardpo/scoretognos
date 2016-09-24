@@ -1,4 +1,6 @@
 class Bet < ActiveRecord::Base
+  obfuscate_id
+
   belongs_to :user_score
   belongs_to :fixture
   belongs_to :points_gap
