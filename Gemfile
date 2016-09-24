@@ -32,6 +32,21 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'devise'
+
+gem 'better_errors'
+
+gem 'binding_of_caller'
+
+gem 'hamlit', '1.5.4' #Always use hamlit which is a 8x faster implementation of haml
+gem 'haml-rails', '0.9.0', group: :production
+
+gem "omniauth-facebook"
+
+gem "figaro"
+
+gem 'font-awesome-sass'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

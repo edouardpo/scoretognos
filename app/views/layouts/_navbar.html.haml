@@ -1,0 +1,27 @@
+%nav.navbar.navbar-default
+  .container-fluid
+    / Brand and toggle get grouped for better mobile display
+    .navbar-header
+      %button.navbar-toggle.collapsed{"aria-expanded" => "false", "data-target" => "#bs-example-navbar-collapse-1", "data-toggle" => "collapse", :type => "button"}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      = link_to "Scoretognos", root_path, class: "navbar-brand"
+    / Collect the nav links, forms, and other content for toggling
+    #bs-example-navbar-collapse-1.collapse.navbar-collapse
+      %ul.nav.navbar-nav.navbar-right
+        - if user_signed_in?
+          %li.dropdown
+            %a.dropdown-toggle.user-menu{role: "button", aria: {expanded: "false", haspopup: "true"}, data: {toggle: "dropdown"}, href: "#"}
+              = image_tag current_user.facebook_picture_url, class: "img-circle user-picture", width: "30px"
+              = current_user.name
+              %b.caret
+            %ul.dropdown-menu
+              %li
+                = link_to(destroy_user_session_path, method: "delete") do
+                  Log Out
+        - else
+          %li
+            = render "layouts/facebook_button"
+
