@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  day_id: 
+  team_a_id: 
+  team_b_id: 
+  score_a: 1
+  score_b: 1
+  bonus_off: MyString
+  bonus_def: MyString
+  starts_at: 2016-09-24 14:21:47
+  bets_start_at: 2016-09-24 14:21:47
+  bets_end_at: 2016-09-24 14:21:47
+
+two:
+  day_id: 
+  team_a_id: 
+  team_b_id: 
+  score_a: 1
+  score_b: 1
+  bonus_off: MyString
+  bonus_def: MyString
+  starts_at: 2016-09-24 14:21:47
+  bets_start_at: 2016-09-24 14:21:47
+  bets_end_at: 2016-09-24 14:21:47

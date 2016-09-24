@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_score_id: 
+  fixture_id: 
+  points_gap_id: 
+  points: 1
+
+two:
+  user_score_id: 
+  fixture_id: 
+  points_gap_id: 
+  points: 1
