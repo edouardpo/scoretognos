@@ -3,10 +3,15 @@ class Championship < ActiveRecord::Base
 
   has_many :teams
   has_many :days
+  has_many :fixtures, through: :days
   has_many :user_scores
 
   validates :name, :start_date, :end_date, presence: :true
   validate :ends_after_starts
+
+  def default_day
+    days.first
+  end
 
   private
 

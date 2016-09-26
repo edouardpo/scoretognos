@@ -3,7 +3,7 @@ class CreateUserScores < ActiveRecord::Migration
     create_table :user_scores do |t|
       t.references :user, index: true, foreign_key: true
       t.references :championship, index: true, foreign_key: true
-      t.integer :value
+      t.integer :value, default: 0
 
       t.timestamps null: false
     end

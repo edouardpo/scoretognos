@@ -87,9 +87,9 @@ ActiveRecord::Schema.define(version: 20160924153559) do
   create_table "user_scores", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "championship_id"
-    t.integer  "value"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.integer  "value",           default: 0
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "user_scores", ["championship_id"], name: "index_user_scores_on_championship_id"

@@ -1,3 +1,33 @@
 .row
   .col-xs-12.text-center
     %h1= @championship.name
+    - raise
+
+.row
+  .col-xs-12
+    = link_to championships_path, class: "btn btn-default btn-xs" do
+      %i.fa.fa-long-arrow-left
+      back
+.row
+  .col-xs-12.text-center
+    = link_to "Fixtures", "#", class: 'btn btn-primary btn-lg'
+
+.row
+  .col-xs-12.col-sm-8.col-md-6.col-sm-offset-2.col-md-offset-3
+    %h2.text-center Standings
+    %table.table.table-striped
+      %tr
+        %th #
+        %th Peignk
+        %th Points
+      - @players_user_scores.each_with_index do |us, idx|
+        - user = us.user
+        - i = 1
+        - 10.times do
+          %tr{class: ("success" if i == 6)}
+            %td= idx+1
+            %td
+              = image_tag user.facebook_picture_url, class: "img-circle user-picture", width: "30px"
+              = user.name
+            %td= us.value
+          - i += 1

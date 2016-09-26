@@ -10,11 +10,12 @@ class ChampionshipsController < ApplicationController
       flash[:alert] = "You must follow this chamionship to access it !"
       redirect_to championships_path
     end
+    @players_user_scores = @championship.user_scores.order(value: :desc)
   end
 
   def join
     @user.user_scores.create!(championship: @championship)
-    flash[:notice] = "La maman de Borie te souhaite la bienvenue dans le championnat #{@championship.name} !"
+    flash[:notice] = "Mrs. Borie wants to welcome you with the warmest hug you ever had !"
     redirect_to championship_path(@championship)
   end
 
