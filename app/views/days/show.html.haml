@@ -1,0 +1,33 @@
+.row
+  .col-xs-12
+    = render "layouts/back_button", path: championship_path(@championship)
+
+.row
+  .col-xs-12
+    %h1
+      = @championship.name
+
+.row
+  .col-xs-12.col-sm-4
+    %form
+      .form-group
+        %select.form-control#day-selector
+          - @days.each do |day|
+            %option{value: day_path(day), selected: ("true" if @day == day)}= day.name
+
+.row#fixtures
+  = render "days/fixtures"
+
+
+
+
+
+
+
+
+
+
+
+
+
+

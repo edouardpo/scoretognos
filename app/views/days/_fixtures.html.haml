@@ -1,0 +1,85 @@
+- today = Date.today
+- @fixtures.each do |fixture|
+  .col-xs-12.fixture-details
+    .row
+      .col-xs-12
+        %p.small
+          %strong
+            = l(fixture.starts_at.to_date, format: :long)
+      .col-xs-12
+        %h3
+          %span{class: ("text-success" if fixture.winner == fixture.team_a)}= fixture.team_a.name
+          = fixture.score_a
+          \-
+          = fixture.score_b
+          %span{class: ("text-success" if fixture.winner == fixture.team_b)}= fixture.team_b.name
+      - if fixture.bonus_off
+        .col-xs-12
+          %p.small
+            Offensive bonus:
+            = fixture.bonus_off == "a" ? fixture.team_a.name : fixture.team_b.name
+      - if fixture.bonus_def
+        .col-xs-12
+          %p.small
+            Defensive bonus:
+            = fixture.bonus_def == "a" ? fixture.team_a.name : fixture.team_b.name
+      - if fixture.bets_closed?
+        .col-xs-12
+          .row
+            .col-xs-12.view-bets-trigger-container
+              = link_to "View bets", "javascript:void(0)", class: "btn btn-default btn-xs"
+            .col-xs-12.hide-bets-trigger-container{style: "display:none;"}
+              = link_to "javascript:void(0)", class: "btn btn-danger" do
+                %i.fa.fa-times
+                Hide
+            .col-xs-12.bets-container{style: "display:none;"}
+              .row
+              - fixture.bets.order(points: :desc).each do |b|
+                - user = b.user
+                .col-xs-12.bet{class: ("text-success" if user == @user)}
+                  = image_tag user.facebook_picture_url, class: "img-circle user-picture", width: "30px"
+                  %strong
+                    = b.points.to_i
+                    Pts
+                    \-
+                    = user.name
+                  \:
+                  = bet_elements(b)
+      - elsif fixture.bettable?
+        .col-xs-12
+          - bet = fixture.bet(@user_score)
+          - if !!bet
+            .row
+              .col-xs-12.bet-details
+                %h6 My bet :
+                %p= bet_elements(bet)
+              .col-xs-12.edit-bet-trigger-container
+                = link_to "javascript:void(0)", class: "btn btn-default btn-xs" do
+                  %i.fa.fa-pencil
+                  Edit bet
+              .col-xs-12.edit-bet-form-container{style: "display:none;"}
+                = render "days/bet_form", bet: bet, path: update_bet_path, fixture: fixture, method: "put"
+
+
+          - else
+            = form_for(Bet.new, url: create_bet_path, html: { method: :post, class: "form-horizontal" }) do |f|
+              = f.hidden_field :fixture_id, value: fixture.id
+              .form-group
+                = f.label :result, class: "col-sm-2 control-label"
+                .col-sm-6
+                  = f.select :result, options_for_select(bet_result_options_for_select(fixture)), {}, class: 'form-control'
+              .form-group
+                = f.label :points_gap_id, "Points gap", class: "col-sm-2 control-label"
+                .col-sm-6
+                  = f.select :points_gap_id, options_for_select(bet_points_gap_options_for_select), {}, class: 'form-control'
+              .form-group
+                = f.label :bonus_off, "Offensive bonus", class: "col-sm-2 control-label"
+                .col-sm-6
+                  = f.select :bonus_off, options_for_select(bet_bonus_options_for_select(fixture)), {}, class: 'form-control'
+              .form-group
+                = f.label :bonus_off, "Defensive bonus", class: "col-sm-2 control-label"
+                .col-sm-6
+                  = f.select :bonus_def, options_for_select(bet_bonus_options_for_select(fixture)), {}, class: 'form-control'
+              .form-group
+                .col-sm-offset-2.col-sm-6
+                  = f.submit "Place bet", class: "btn btn-default"

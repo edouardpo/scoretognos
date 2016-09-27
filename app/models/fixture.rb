@@ -4,6 +4,7 @@ class Fixture < ActiveRecord::Base
   belongs_to :day
   belongs_to :team_a, class_name: 'Team'
   belongs_to :team_b, class_name: 'Team'
+  has_many :bets
 
   before_validation :set_dates
   validates :day, :team_a, :team_b, :starts_at, :bets_start_at, :bets_end_at, presence: :true
@@ -39,15 +40,40 @@ class Fixture < ActiveRecord::Base
       elsif score_a < score_b
         Result::B
       else
-        Result::Draw
+        Result::DRAW
       end
     else
-      Result::Draw
+      Result::UNKNOWN
     end
   end
 
   def points_gap
     (score_a - score_b).abs
+  end
+
+  def winner
+    if result == Result::A
+      team_a
+    elsif result == Result::B
+      team_b
+    end
+  end
+
+  def score_registered?
+    !!score_a && !!score_b
+  end
+
+  def bettable?
+    now = Time.now
+    ( now >= bets_start_at ) && ( now <= bets_end_at )
+  end
+
+  def bets_closed?
+    Time.now > bets_end_at
+  end
+
+  def bet user_score
+    bets.where(user_score: user_score).first
   end
 
   private
@@ -61,6 +87,9 @@ class Fixture < ActiveRecord::Base
   end
 
   def update_all_bets
-    bets.all.each {|b| b.update_points}
+    bets.all.each do |b|
+      b.skip_fixture_bettable_validation = true
+      b.update_points
+    end
   end
 end

@@ -8,6 +8,11 @@ Rails.application.routes.draw do
   get 'championships/:id' => "championships#show", as: :championship
   post 'championships/join/:id' => "championships#join", as: :join_championship
 
+  get 'days/:id' => "days#show", as: :day
+
+  post 'bets/create' => "bets#create", as: :create_bet
+  put 'bets/update' => "bets#update", as: :update_bet
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
