@@ -10,7 +10,7 @@ PointsGap.create(bottom: 41, active: true)
 # CHAMPIONSHIP
 championship = Championship.create!(
   name: "FFSE Rugby 2016/2017",
-  start_date: Date.new(2016,9,1),
+  start_date: Date.new(2016,9,3),
   end_date: Date.new(2017,6,30)
 )
 
@@ -74,8 +74,8 @@ if Rails.env.development?
           b.save!(validate: false)
         end
 
-        f.score_a = Random.rand(2)
-        f.score_b = Random.rand(2)
+        f.score_a = Random.rand(20)
+        f.score_b = Random.rand(20)
 
         if f.score_a > f.score_b
           f.bonus_off = ["a", nil].shuffle.first

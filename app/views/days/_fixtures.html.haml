@@ -6,60 +6,53 @@
         %p.small
           %strong
             = l(fixture.starts_at.to_date, format: :long)
-      .col-xs-12
+    .row
+      .col-xs-12{class: ("text-success" if fixture.winner == fixture.team_a)}
         %h3
-          %span{class: ("text-success" if fixture.winner == fixture.team_a)}= fixture.team_a.name
-          = fixture.score_a
-          \-
-          = fixture.score_b
-          %span{class: ("text-success" if fixture.winner == fixture.team_b)}= fixture.team_b.name
-      - if fixture.bonus_off
-        .col-xs-12
-          %p.small
-            Offensive bonus:
-            = fixture.bonus_off == "a" ? fixture.team_a.name : fixture.team_b.name
-      - if fixture.bonus_def
-        .col-xs-12
-          %p.small
-            Defensive bonus:
-            = fixture.bonus_def == "a" ? fixture.team_a.name : fixture.team_b.name
-      - if fixture.bets_closed?
-        .col-xs-12
+          = display_result(fixture, "a")
+          %span.small= display_bonus(fixture, "a")
+      .col-xs-12{class: ("text-success" if fixture.winner == fixture.team_b)}
+        %h3
+          = display_result(fixture, "b")
+          %span.small= display_bonus(fixture, "b")
+    - if fixture.bets_closed?
+      .row
+        .col-xs-12.view-bets-trigger-container
+          = link_to "View bets", "javascript:void(0)", class: "btn btn-default btn-xs"
+        .col-xs-12.hide-bets-trigger-container{style: "display:none;"}
+          = link_to "javascript:void(0)", class: "btn btn-danger" do
+            %i.fa.fa-times
+            Hide
+        .col-xs-12.bets-container{style: "display:none;"}
           .row
-            .col-xs-12.view-bets-trigger-container
-              = link_to "View bets", "javascript:void(0)", class: "btn btn-default btn-xs"
-            .col-xs-12.hide-bets-trigger-container{style: "display:none;"}
-              = link_to "javascript:void(0)", class: "btn btn-danger" do
-                %i.fa.fa-times
-                Hide
-            .col-xs-12.bets-container{style: "display:none;"}
-              .row
-              - fixture.bets.order(points: :desc).each do |b|
-                - user = b.user
-                .col-xs-12.bet{class: ("text-success" if user == @user)}
-                  = image_tag user.facebook_picture_url, class: "img-circle user-picture", width: "30px"
-                  %strong
-                    = b.points.to_i
-                    Pts
-                    \-
-                    = user.name
-                  \:
-                  = bet_elements(b)
-      - elsif fixture.bettable?
-        .col-xs-12
-          - bet = fixture.bet(@user_score)
-          - if !!bet
-            .row
-              .col-xs-12.bet-details
-                %h6 My bet :
-                %p= bet_elements(bet)
-              .col-xs-12.edit-bet-trigger-container
-                = link_to "javascript:void(0)", class: "btn btn-default btn-xs" do
-                  %i.fa.fa-pencil
-                  Edit bet
-              .col-xs-12.edit-bet-form-container{style: "display:none;"}
-                = render "days/bet_form", bet: bet, path: update_bet_path, fixture: fixture, method: "put"
-
-
-          - else
+          - fixture.bets.order(points: :desc).each do |b|
+            - user = b.user
+            .col-xs-12.bet{class: ("text-success" if user == @user)}
+              = image_tag user.facebook_picture_url, class: "img-circle user-picture", width: "30px"
+              %strong
+                = b.points.to_i
+                Pts
+                \-
+                = user.name
+              \:
+              = bet_elements(b)
+    - elsif fixture.bettable?
+      - bet = fixture.bet(@user_score)
+      - if !!bet
+        .row
+          .col-xs-12.bet-details
+            %h6 My bet :
+            %p= bet_elements(bet)
+          .col-xs-12.edit-bet-trigger-container
+            = link_to "javascript:void(0)", class: "btn btn-default btn-xs" do
+              %i.fa.fa-pencil
+              Edit bet
+          .col-xs-12.edit-bet-form-container{style: "display:none;"}
+            = render "days/bet_form", bet: bet, path: update_bet_path, fixture: fixture, method: "put"
+      - else
+        .row
+          .col-xs-12
             = render "days/bet_form", bet: Bet.new, path: create_bet_path, fixture: fixture, method: "post"
+    .row
+      .col-xs-12
+        %hr
