@@ -10,8 +10,10 @@ module FixturesToBet
   def get_fixtures_to_bet
     if @user
       fixtures = @user.fixtures_to_bet
-      days = fixtures.group_by{|f| f.day}.keys
-      flash.now[:alert] = "You got #{fixtures.size} bets to place in #{days.map(&:name).join(", ")}."
+      if fixtures.any?
+        days = fixtures.group_by{|f| f.day}.keys
+        flash.now[:alert] = "You got #{fixtures.size} bets to place in #{days.map(&:name).join(", ")}."
+      end
     end
   end
 end
