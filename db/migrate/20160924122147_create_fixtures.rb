@@ -2,8 +2,8 @@ class CreateFixtures < ActiveRecord::Migration
   def change
     create_table :fixtures do |t|
       t.references :day, index: true, foreign_key: true
-      t.references :team_a, index: true, foreign_key: true
-      t.references :team_b, index: true, foreign_key: true
+      t.references :team_a, index: true
+      t.references :team_b, index: true
       t.integer :score_a
       t.integer :score_b
       t.string :bonus_off
