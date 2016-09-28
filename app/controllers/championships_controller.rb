@@ -1,5 +1,8 @@
 class ChampionshipsController < ApplicationController
+  before_action :authenticate_user!
+  skip_before_action :get_fixtures_to_bet, only: [:index]
   before_action :set_championship, except: [:index]
+
 
   def index
     @championships = Championship.all

@@ -1,4 +1,6 @@
 class BetsController < ApplicationController
+  before_action :authenticate_user!
+  skip_before_action :get_fixtures_to_bet
   before_action :set_fixture
   before_action :set_day
   before_action :set_championship
@@ -8,7 +10,9 @@ class BetsController < ApplicationController
     @bet = Bet.new(bet_params)
     @bet.user_score = @user_score
 
-    unless @bet.save
+    if @bet.save
+      get_fixtures_to_bet
+    else
       flash.now[:alert] = "Bet is invalid"
     end
 
@@ -25,7 +29,9 @@ class BetsController < ApplicationController
     @bet = @user_score.bets.find_by(fixture_id: @fixture.id)
     @bet.attributes = bet_params
 
-    unless @bet.save
+    if @bet.save
+      get_fixtures_to_bet
+    else
       flash.now[:alert] = "Bet is invalid"
     end
 

@@ -1,4 +1,5 @@
 class DaysController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_day
   before_action :set_championship
   before_action :set_user_score

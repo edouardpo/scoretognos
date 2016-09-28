@@ -62,24 +62,4 @@
 
 
           - else
-            = form_for(Bet.new, url: create_bet_path, html: { method: :post, class: "form-horizontal" }) do |f|
-              = f.hidden_field :fixture_id, value: fixture.id
-              .form-group
-                = f.label :result, class: "col-sm-2 control-label"
-                .col-sm-6
-                  = f.select :result, options_for_select(bet_result_options_for_select(fixture)), {}, class: 'form-control'
-              .form-group
-                = f.label :points_gap_id, "Points gap", class: "col-sm-2 control-label"
-                .col-sm-6
-                  = f.select :points_gap_id, options_for_select(bet_points_gap_options_for_select), {}, class: 'form-control'
-              .form-group
-                = f.label :bonus_off, "Offensive bonus", class: "col-sm-2 control-label"
-                .col-sm-6
-                  = f.select :bonus_off, options_for_select(bet_bonus_options_for_select(fixture)), {}, class: 'form-control'
-              .form-group
-                = f.label :bonus_off, "Defensive bonus", class: "col-sm-2 control-label"
-                .col-sm-6
-                  = f.select :bonus_def, options_for_select(bet_bonus_options_for_select(fixture)), {}, class: 'form-control'
-              .form-group
-                .col-sm-offset-2.col-sm-6
-                  = f.submit "Place bet", class: "btn btn-default"
+            = render "days/bet_form", bet: Bet.new, path: create_bet_path, fixture: fixture, method: "post"

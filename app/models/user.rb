@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :rememberable, :trackable, :validatable
   devise :omniauthable, omniauth_providers: [:facebook]
   has_many :user_scores
+  has_many :championships, through: :user_scores
 
   def self.find_for_facebook_oauth(auth)
     user_params = auth.to_h.slice(:provider, :uid)
@@ -29,5 +30,15 @@ class User < ActiveRecord::Base
 
   def has_joined championship
     user_scores.where(championship_id: championship.id).any?
+  end
+
+  def fixtures_to_bet
+    fixtures = []
+    user_scores.each do |us|
+      bettable_fixtures = us.championship.fixtures.bettable
+      bettable_fixtures_bet_on_by_us = us.bets.where(fixture: bettable_fixtures.map(&:id)).fixtures
+      bettable_fixtures.all.each {|f| fixtures << f unless bettable_fixtures_bet_on_by_us.include?(f)}
+    end
+    fixtures
   end
 end

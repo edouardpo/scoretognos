@@ -7,9 +7,10 @@ class Fixture < ActiveRecord::Base
   has_many :bets
 
   before_validation :set_dates
+  before_validation :set_bonus
   validates :day, :team_a, :team_b, :starts_at, :bets_start_at, :bets_end_at, presence: :true
 
-  after_save :update_all_bets, if: Proc.new { |f| f.score_a_changed? || f.score_b_changed? || bonus_off_changed? || bonus_def_changed? }
+  after_save :update_bets, if: Proc.new { |f| f.score_a_changed? || f.score_b_changed? || bonus_off_changed? || bonus_def_changed? }
 
   module BonusOff
     A = 'a'
@@ -76,20 +77,39 @@ class Fixture < ActiveRecord::Base
     bets.where(user_score: user_score).first
   end
 
+  def self.bettable
+    now = Time.now
+    self.where("bets_start_at <= ? AND bets_end_at >= ?", now, now).order(bets_end_at: :desc)
+  end
+
+  def self.passed
+    self.where("starts_at <= ?", Time.now - 2.hours)
+  end
+
+  def self.to_come
+    self.where("starts_at > ?", Time.now - 2.hours)
+  end
+
+  def self.to_update
+    self.passed.where(score_a: nil)
+  end
+
   private
+
+  def set_bonus
+    self.bonus_def = nil if bonus_def.blank?
+    self.bonus_off = nil if bonus_off.blank?
+  end
 
   def set_dates
     if day
       self.starts_at = day.date unless !!self.starts_at
-      self.bets_start_at = day.date.beginning_of_week(start_day = :monday) unless !!self.bets_start_at
-      self.bets_end_at = day.date - 1.days unless !!self.bets_end_at
+      self.bets_start_at = self.starts_at.beginning_of_week(start_day = :monday) unless !!self.bets_start_at
+      self.bets_end_at = self.starts_at.beginning_of_day
     end
   end
 
-  def update_all_bets
-    bets.all.each do |b|
-      b.skip_fixture_bettable_validation = true
-      b.update_points
-    end
+  def update_bets
+    bets.all.each { |b| b.update_points }
   end
 end

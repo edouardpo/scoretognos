@@ -3,6 +3,7 @@ class Day < ActiveRecord::Base
 
   belongs_to :championship
   has_many :fixtures
+  has_many :bets, through: :fixtures
 
   validates :championship, :date, :status, :name, presence: :true
   module Status

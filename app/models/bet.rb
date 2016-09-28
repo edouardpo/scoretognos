@@ -23,13 +23,14 @@ class Bet < ActiveRecord::Base
   end
 
   before_validation :set_bonus
+
   validates :result, inclusion: { in: RESULT }
   validates :bonus_off, inclusion: { in: [BonusOff::ALL, nil].flatten }
   validates :bonus_def, inclusion: { in: [BonusDef::ALL, nil].flatten }
-  validate :fixture_bettable, unless: :skip_fixture_bettable_validation
-  validate :valid_points_gap
-
-  attr_accessor :skip_fixture_bettable_validation
+  validate :valid_points_gap, :valid_bonus_def
+  validates :fixture, uniqueness: { scope: :user_score_id,
+    message: "You can place only one bet on a fixture." }
+  validate :fixture_bettable
 
 
   def update_points
@@ -37,9 +38,10 @@ class Bet < ActiveRecord::Base
 
     # Result
     if result == fixture.result
-      total_points += 3
-
-      unless fixture.result == Fixture::Result::DRAW
+      if fixture.result == Fixture::Result::DRAW
+        total_points += 25
+      else
+        total_points += 3
         # Points gap
         if points_gap
           actual_points_gap = fixture.points_gap
@@ -49,8 +51,17 @@ class Bet < ActiveRecord::Base
         end
 
         # Bonus
-        total_points += 1 if bonus_off == fixture.bonus_off
-        total_points += 1 if bonus_def == fixture.bonus_def
+        if !!fixture.bonus_off
+          total_points += 2 if bonus_off == fixture.bonus_off
+        else
+          total_points += 1 if bonus_off.nil?
+        end
+
+        if !!fixture.bonus_def
+          total_points += 2 if bonus_def == fixture.bonus_def
+        else
+          total_points += 1 if bonus_def.nil?
+        end
       end
     end
 
@@ -59,7 +70,7 @@ class Bet < ActiveRecord::Base
     end
 
     self.points = total_points
-    self.save!
+    self.save!(validate: false)
   end
 
   def user
@@ -72,6 +83,10 @@ class Bet < ActiveRecord::Base
     elsif result == "b"
       fixture.team_b
     end
+  end
+
+  def self.fixtures
+    self.all.map(&:fixture)
   end
 
   private
@@ -97,7 +112,9 @@ class Bet < ActiveRecord::Base
     else
       errors.add(:points_gap, "there should be a points gap") if !points_gap
     end
-
   end
 
+  def valid_bonus_def
+    errors.add(:bonus_def, "Bonus def can only be awarded to looser.") if (result == "draw" && !!bonus_def) || (result == bonus_def)
+  end
 end
