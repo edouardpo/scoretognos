@@ -21,5 +21,13 @@ $(document).on 'ready ajaxComplete page:load', ->
     container.find(".edit-bet-trigger-container").hide()
     container.find(".edit-bet-form-container").show()
 
+  $('.bet-form .result-select').on 'change', ->
+    form = $(this).parent().closest('.bet-form')
+    if this.value == 'draw'
+      form.find(".winner-fields-container").hide()
+    else
+      form.find(".winner-fields-container").show()
+
+
 
 

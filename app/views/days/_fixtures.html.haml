@@ -7,14 +7,14 @@
           %strong
             = l(fixture.starts_at.to_date, format: :long)
     .row
-      .col-xs-12{class: ("text-success" if fixture.winner == fixture.team_a)}
-        %h3
+      .col-xs-12
+        %h3{class: ("winner" if fixture.winner == fixture.team_a)}
           = display_result(fixture, "a")
-          %span.small= display_bonus(fixture, "a")
-      .col-xs-12{class: ("text-success" if fixture.winner == fixture.team_b)}
-        %h3
+          %small= display_bonus(fixture, "a")
+      .col-xs-12
+        %h3{class: ("winner" if fixture.winner == fixture.team_b)}
           = display_result(fixture, "b")
-          %span.small= display_bonus(fixture, "b")
+          %small= display_bonus(fixture, "b")
     - if fixture.bets_closed?
       .row
         .col-xs-12.view-bets-trigger-container

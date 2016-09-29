@@ -1,6 +1,10 @@
 .fixture-details {
   h3 {
+    color: #777;
     margin: 0px 0px 5px 0px;
+    &.winner {
+      color: #3c763d;
+    }
   }
   p {
     margin-bottom: 3px;
