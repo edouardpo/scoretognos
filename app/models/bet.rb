@@ -50,18 +50,19 @@ class Bet < ActiveRecord::Base
           end
         end
 
-        # Bonus
-        if !!fixture.bonus_off
-          total_points += 2 if bonus_off == fixture.bonus_off
-        else
-          total_points += 1 if bonus_off.nil?
-        end
-
+        # Bonus def
         if !!fixture.bonus_def
           total_points += 2 if bonus_def == fixture.bonus_def
         else
           total_points += 1 if bonus_def.nil?
         end
+      end
+
+      # Bonus off
+      if !!fixture.bonus_off
+        total_points += 2 if bonus_off == fixture.bonus_off
+      else
+        total_points += 1 if bonus_off.nil?
       end
     end
 
